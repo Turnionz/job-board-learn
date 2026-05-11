@@ -16,6 +16,6 @@
         @endif
     </head>
     <body>
-        <div class="text-2xl">Big text</div>
+        {{ $slot }}<div class="text-2xl">Big text</div>
     </body>
 </html>
