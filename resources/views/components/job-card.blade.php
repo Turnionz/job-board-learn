@@ -15,7 +15,6 @@
         </div>
     </div>
 
-    <p class="text-sm text-slate-500">{{ nl2br(e($job->description)) }}</p>
     <div class="mt-3">
         {{ $slot }}
     </div>
