@@ -14,7 +14,7 @@ class JobController extends Controller
     {
         $filters = $request->only('search', 'min_salary', 'max_salary', 'experience', 'category');
 
-        return view('jobs.index', ['jobs' => Job::filter($filters)->get()]);
+        return view('jobs.index', ['jobs' => Job::with('employer')->filter($filters)->get()]);
     }
 
     /**
@@ -38,7 +38,7 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        return view('jobs.show', compact('job'));
+        return view('jobs.show', ['job' => $job->load('employer.jobs')]);
     }
 
     /**
