@@ -3,21 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    function create()
     {
         return view('auth.create');
     }
@@ -27,38 +17,34 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $credentials = $request->only('email', 'password');
+        $remember = $request->filled('remember');
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        if (Auth::attempt($credentials, $remember)) {
+            return redirect()->intended('/');
+        } else {
+            return redirect()->back()->with('error', 'Invalid credentials');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy()
     {
-        //
+        Auth::logout();
+
+        // Clearing out user session data
+        request()->session()->invalidate();
+
+        // Regenerating token for csrf forms
+        request()->session()->regenerateToken();
+
+        return redirect('/');
     }
 }
