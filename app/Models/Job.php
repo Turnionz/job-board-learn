@@ -31,7 +31,7 @@ class Job extends Model
     {
         return $this->where('id', $this->id)
             ->whereHas(
-                'jobApplicatons',
+                'jobApplications',
                 fn($query) => $query->where('user_id', '=', $user->id ?? $user)
             )->exists();
     }
