@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobRequest;
 use App\Models\Job;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class MyJobController extends Controller
 {
+
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -30,14 +33,16 @@ class MyJobController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Job::class);
         return view('my_jobs.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(JobRequest $request)
+    public function store(JobRequest $request, Job $myJob)
     {
+        $this->authorize('update', $myJob);
         $request->user()->employer->jobs()->create($request->validated());
 
         return redirect()->route('my_jobs.index')->with('success', 'Job created successfully!');
