@@ -24,7 +24,7 @@ class MyJobController extends Controller
                         'jobApplications',
                         'jobApplications.user'
                     ]
-                )->get()
+                )->withTrashed()->get()
         ]);
     }
 
@@ -69,8 +69,10 @@ class MyJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Job $myJob)
     {
-        //
+        $myJob->delete();
+
+        return redirect()->route('my_jobs.index')->with('success', 'Job posting deleted successfully!');
     }
 }
